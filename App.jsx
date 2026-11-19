@@ -202,7 +202,7 @@ function App() {
       <div className="nav-label">WORKSPACE</div>
       <nav>{nav.map(n => <button key={n.id} className={`nav-item ${page===n.id?"active":""}`} onClick={()=>{setPage(n.id);setMobileNav(false);setSelected(null)}}><n.icon size={18}/><span>{n.label}</span>{n.id==="disputes" && jobs.some(j=>j.status===4) && <i className="nav-dot"/>}</button>)}</nav>
       <div className="sidebar-bottom">
-        <div className="security-card"><div className="security-icon"><Shield size={17}/></div><b>Secure Escrow</b><p>การชำระเงินถูกควบคุมด้วย Smart Contract บน Ethereum</p><span><span className="green-dot"/> ระบบพร้อมใช้งาน</span></div>
+        <div className="security-card"><div className="security-icon"><Shield size={17}/></div><b>Secure Escrow</b><p>การชำระเงินถูกควบคุมด้วย Smart Contract บน Ethereum</p><span>Ethereum Sepolia Testnet</span></div>
         <div className="profile-mini"><div className="avatar">{account ? account.slice(2,4).toUpperCase() : "DW"}</div><div><b>{account ? shortAddress(account) : "Guest User"}</b><small>{isAdmin ? "Administrator / Arbiter" : "Connected Wallet"}</small></div><button title="เชื่อมต่อ Wallet" onClick={connect}><Wallet size={17}/></button></div>
       </div>
     </aside>
@@ -217,6 +217,7 @@ function App() {
       </header>
 
       <div className="content">
+        {!account && <div className="guest-notice"><Wallet size={19}/><span>เชื่อมต่อ MetaMask บน Sepolia เพื่อดูข้อมูลงานและทำธุรกรรม</span><button onClick={()=>{setPage("guide");setSelected(null)}}>ดูคู่มือใช้งาน</button></div>}
         
         {chainId && chainId !== TARGET_CHAIN_ID && <div className="config-alert warning-alert"><CircleAlert/><div><b>เครือข่ายไม่ตรงกับที่ตั้งค่าไว้</b><p>กรุณาเปลี่ยน Network ใน MetaMask เป็น Chain ID {TARGET_CHAIN_ID} เพื่อทำธุรกรรม</p></div></div>}
 
@@ -227,7 +228,7 @@ function App() {
           </div>
 
           {page==="dashboard" && <>
-            <div className="welcome-banner"><div className="banner-copy"><span className="banner-tag"><Sparkles size={12}/> TRUSTED WORKSPACE</span><h2>ทำงานอย่างมั่นใจ<br/>ทุกการจ่ายเงินมีหลักประกัน</h2><p>จัดการข้อตกลง จัดเก็บเงินค่าจ้าง และจ่ายเงินเมื่อส่งมอบงานสำเร็จ</p><button onClick={()=>setShowCreate(true)}>เริ่มสร้างโปรเจกต์ <ArrowUpRight size={16}/></button></div><div className="banner-art"><div className="art-orbit orbit-one"/><div className="art-orbit orbit-two"/><div className="art-card"><div className="art-card-top"><span>ESCROW BALANCE</span><ShieldCheckIcon/><div className="art-amount">Ξ ETH</div><small>Protected by Smart Contract</small></div><div className="art-card-bottom"><span>SECURE PAYMENT</span><BadgeCheck size={17}/></div></div><div className="floating-check"><Check size={20}/></div></div></div>
+            <div className="welcome-banner"><div className="banner-copy"><span className="banner-tag"><Sparkles size={12}/> FREELANCE ESCROW · SEPOLIA TESTNET</span><h2>ไอเดียที่ดี<br/><em>เริ่มด้วยความเชื่อใจ</em></h2><p>สร้างข้อตกลง ฝากค่าจ้าง และส่งมอบงานอย่างโปร่งใสบนบล็อกเชน</p><button onClick={()=>setShowCreate(true)}>เริ่มสร้างโปรเจกต์ <ArrowUpRight size={16}/></button></div><div className="banner-art"><div className="art-orbit orbit-one"/><div className="art-orbit orbit-two"/><div className="art-card"><div className="art-card-top"><span>ESCROW BALANCE</span><ShieldCheckIcon/><div className="art-amount">Ξ ETH</div><small>Protected by Smart Contract</small></div><div className="art-card-bottom"><span>SECURE PAYMENT</span><BadgeCheck size={17}/></div></div><div className="floating-check"><Check size={20}/></div></div></div>
             <div className="stats-grid">
               <Stat icon={BriefcaseBusiness} label="โปรเจกต์ทั้งหมด" value={jobs.length} hint="On-chain projects" tone="blue"/>
               <Stat icon={Clock3} label="กำลังดำเนินงาน" value={jobs.filter(j=>j.status===1||j.status===2).length} hint="Funded / Submitted" tone="purple"/>
@@ -258,7 +259,7 @@ function App() {
           {page==="activity" && <div className="panel"><div className="panel-head"><div><h3>On-chain Activity</h3><p>Event logs จาก Smart Contract</p></div><Activity size={19}/></div>{events.length ? <div className="activity-list">{events.map((ev,i)=><div className="activity-item" key={`${ev.hash}-${i}`}><div className="activity-icon"><Activity size={16}/></div><div className="activity-main"><b>{eventLabel(ev.name)} · Job #{ev.jobId}</b><small>Block #{ev.block}</small></div><a href={`https://sepolia.etherscan.io/tx/${ev.hash}`} target="_blank" rel="noreferrer">{shortAddress(ev.hash)} <ArrowUpRight size={13}/></a></div>)}</div>:<Empty title="ยังไม่มีประวัติธุรกรรม" desc="เมื่อมีการทำรายการบน Smart Contract ประวัติจะแสดงที่นี่"/>}</div>}
         </>}
       </div>
-      <footer className="footer"><span>© 2026 DigitalWork Solutions</span><span><span className="green-dot"/> Powered by Ethereum Smart Contract</span></footer>
+      <footer className="footer"><span>© 2026 DigitalWork Solutions</span><span>Ethereum · Sepolia Testnet</span></footer>
     </main>
 
     {showCreate && <div className="modal-backdrop" onMouseDown={e=>e.target===e.currentTarget&&setShowCreate(false)}><div className="modal"><div className="modal-head"><div><span className="eyebrow">NEW AGREEMENT</span><h2>สร้างข้อตกลงการจ้างงาน</h2><p>รายละเอียดจะถูกบันทึกลง Smart Contract</p></div><button className="icon-btn" onClick={()=>setShowCreate(false)}><X/></button></div><form onSubmit={createJob}><label>ชื่อโปรเจกต์<input required maxLength="100" placeholder="เช่น Website Development" value={form.title} onChange={e=>setForm({...form,title:e.target.value})}/></label><label>รายละเอียดงาน<textarea required rows="3" placeholder="อธิบายขอบเขตงานและสิ่งที่ต้องส่งมอบ..." value={form.description} onChange={e=>setForm({...form,description:e.target.value})}/></label><label>Freelancer Wallet Address<input required placeholder="0x..." value={form.freelancer} onChange={e=>setForm({...form,freelancer:e.target.value})}/></label><div className="form-two"><label>ค่าจ้าง (ETH)<input required type="number" min="0.000001" step="any" placeholder="0.05" value={form.amount} onChange={e=>setForm({...form,amount:e.target.value})}/></label><label>กำหนดส่งงาน<input required type="datetime-local" value={form.deadline} onChange={e=>setForm({...form,deadline:e.target.value})}/></label></div><div className="modal-note"><Shield size={16}/> การสร้างข้อตกลงจะยังไม่ล็อกเงิน คุณต้องกด Deposit หลังสร้างงาน</div><button className="primary-btn full-btn" disabled={!!busy}>{busy==="create"?<LoaderCircle className="spin"/>:<Plus size={17}/>} {busy==="create"?"กำลังสร้าง...":"Create Agreement"}</button></form></div></div>}
