@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import {
   Activity, ArrowDownToLine, ArrowUpRight, BadgeCheck, BriefcaseBusiness,
   Check, ChevronDown, CircleAlert, Clock3, FileCheck2, FileUp, FolderKanban,
-  LayoutDashboard, Link2, LoaderCircle, Menu, Plus, RefreshCw, Search,
+  BookOpen, LayoutDashboard, Link2, LoaderCircle, Menu, Plus, RefreshCw, Search,
   Shield, ShieldAlert, Sparkles, Wallet, X
 } from "lucide-react";
 import {
@@ -191,7 +191,8 @@ function App() {
     { id:"dashboard", label:"ภาพรวม", icon:LayoutDashboard },
     { id:"projects", label:"โปรเจกต์ของฉัน", icon:FolderKanban },
     { id:"disputes", label:"ข้อพิพาท", icon:ShieldAlert },
-    { id:"activity", label:"ประวัติธุรกรรม", icon:Activity }
+    { id:"activity", label:"ประวัติธุรกรรม", icon:Activity },
+    { id:"guide", label:"คู่มือใช้งาน", icon:BookOpen }
   ];
 
   return <div className="app-shell">
@@ -221,7 +222,7 @@ function App() {
 
         {selected ? <JobDetail job={selected} account={account} isAdmin={isAdmin} busy={busy} deliverable={deliverable} setDeliverable={setDeliverable} fileName={fileName} chooseFile={chooseFile} onBack={()=>setSelected(null)} onAction={doAction}/> :
         <>
-          <div className="page-heading"><div><div className="eyebrow"><Sparkles size={13}/> FREELANCE WORKSPACE</div><h1>{page==="dashboard"?"จัดการงานของคุณ":page==="projects"?"โปรเจกต์ของฉัน":page==="disputes"?"ศูนย์จัดการข้อพิพาท":"ประวัติธุรกรรม"}</h1><p>{page==="dashboard"?"ติดตามโปรเจกต์ การชำระเงิน และความคืบหน้าทั้งหมดในที่เดียว":"จัดการธุรกรรมการจ้างงานผ่าน Smart Contract อย่างโปร่งใส"}</p></div>
+          <div className="page-heading"><div><div className="eyebrow"><Sparkles size={13}/> FREELANCE WORKSPACE</div><h1>{page==="dashboard"?"จัดการงานของคุณ":page==="projects"?"โปรเจกต์ของฉัน":page==="disputes"?"ศูนย์จัดการข้อพิพาท":page==="guide"?"คู่มือใช้งาน":"ประวัติธุรกรรม"}</h1><p>{page==="dashboard"?"ติดตามโปรเจกต์ การชำระเงิน และความคืบหน้าทั้งหมดในที่เดียว":"จัดการธุรกรรมการจ้างงานผ่าน Smart Contract อย่างโปร่งใส"}</p></div>
             <div className="heading-actions"><button className="icon-btn" onClick={refresh} title="Refresh"><RefreshCw size={17} className={loading?"spin":""}/></button><button className="primary-btn" onClick={()=>setShowCreate(true)}><Plus size={17}/> สร้างโปรเจกต์</button></div>
           </div>
 
@@ -240,6 +241,20 @@ function App() {
 
           {page==="projects" && <><div className="filter-bar"><div className="search-box"><Search size={17}/><input placeholder="ค้นหาชื่อโปรเจกต์, ID หรือ Wallet..." value={search} onChange={e=>setSearch(e.target.value)}/></div><span className="muted">{filtered.length} projects</span></div><ProjectTable jobs={filtered} onOpen={openJob}/></>}
           {page==="disputes" && <><div className="info-strip"><ShieldAlert size={19}/><span>รายการโปรเจกต์ที่ถูกแจ้งข้อพิพาท ผู้ดูแลระบบ (Arbiter) สามารถพิจารณาจ่ายเงินหรือคืนเงินได้</span></div><ProjectTable jobs={filtered} onOpen={openJob}/></>}
+          {page==="guide" && <section className="panel usage-guide" aria-label="คู่มือใช้งาน DigitalWork">
+            <h2>เริ่มต้นใช้งาน DigitalWork</h2>
+            <p>เว็บไซต์นี้ใช้เครือข่าย Sepolia สำหรับทดลอง Smart Contract โปรดตรวจสอบที่อยู่สัญญา เครือข่าย และรายละเอียดในกระเป๋าก่อนยืนยันทุกธุรกรรม</p>
+            <ol>
+              <li><strong>เตรียมกระเป๋า</strong> ติดตั้ง MetaMask เพิ่มเครือข่าย Sepolia และเตรียม Sepolia test ETH สำหรับค่าธรรมเนียมและการทดลองฝากเงิน</li>
+              <li><strong>เชื่อมต่อ</strong> กด Connect Wallet และเลือกบัญชีที่ต้องการใช้งาน หากเครือข่ายไม่ตรงให้เปลี่ยนใน MetaMask</li>
+              <li><strong>ผู้ว่าจ้างสร้างงาน</strong> กดสร้างโปรเจกต์ กรอกชื่องาน รายละเอียด Wallet ของฟรีแลนซ์ ค่าจ้างและกำหนดส่ง แล้วยืนยันธุรกรรม</li>
+              <li><strong>ผู้ว่าจ้างฝากเงิน</strong> เปิดรายละเอียดงานแล้วกด Deposit ฝาก ETH ตามจำนวนที่ตกลงไว้ งานจึงเปลี่ยนเป็น Funded</li>
+              <li><strong>ฟรีแลนซ์ส่งงาน</strong> เปิดงานที่ได้รับมอบหมาย กรอกลิงก์ผลงาน หรือเลือกไฟล์เพื่อคำนวณ SHA-256 ในเบราว์เซอร์ จากนั้นยืนยันการส่งงาน</li>
+              <li><strong>ตรวจและจ่าย</strong> ผู้ว่าจ้างตรวจหลักฐานและกดอนุมัติจ่ายเงิน สถานะงานจะเปลี่ยนเป็น Completed หลังธุรกรรมสำเร็จ</li>
+              <li><strong>ข้อพิพาทและประวัติ</strong> คู่สัญญาแจ้งข้อพิพาทได้ และ Arbiter ที่สัญญากำหนดเท่านั้นที่ตัดสินจ่ายหรือคืนเงิน ตรวจสอบธุรกรรมผ่านเมนูประวัติและลิงก์ Etherscan</li>
+            </ol>
+            <p>หากข้อมูลไม่ปรากฏ ให้ตรวจสอบ MetaMask, เครือข่าย Sepolia และที่อยู่ Smart Contract ที่ตั้งค่าไว้ แล้วกด Refresh</p>
+          </section>}
           {page==="activity" && <div className="panel"><div className="panel-head"><div><h3>On-chain Activity</h3><p>Event logs จาก Smart Contract</p></div><Activity size={19}/></div>{events.length ? <div className="activity-list">{events.map((ev,i)=><div className="activity-item" key={`${ev.hash}-${i}`}><div className="activity-icon"><Activity size={16}/></div><div className="activity-main"><b>{eventLabel(ev.name)} · Job #{ev.jobId}</b><small>Block #{ev.block}</small></div><a href={`https://sepolia.etherscan.io/tx/${ev.hash}`} target="_blank" rel="noreferrer">{shortAddress(ev.hash)} <ArrowUpRight size={13}/></a></div>)}</div>:<Empty title="ยังไม่มีประวัติธุรกรรม" desc="เมื่อมีการทำรายการบน Smart Contract ประวัติจะแสดงที่นี่"/>}</div>}
         </>}
       </div>
